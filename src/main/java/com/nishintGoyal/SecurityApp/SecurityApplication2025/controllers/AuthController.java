@@ -46,7 +46,6 @@ public class AuthController
         cookie.setHttpOnly(true);
         httpServletResponse.addCookie(cookie);
 
-
         return ResponseEntity.ok(token);
     }
 }
