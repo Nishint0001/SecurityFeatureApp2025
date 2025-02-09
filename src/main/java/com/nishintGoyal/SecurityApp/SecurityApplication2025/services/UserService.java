@@ -26,28 +26,24 @@ public class UserService implements UserDetailsService
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-
     public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder)
     {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        UserEntity userEntity=userRepository.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("user with email not foundd"+username));
+        UserEntity userEntity=userRepository.findByEmail(username).orElseThrow(()->new BadCredentialsException("USER NOT FOUND ="+username));
         return userEntity;
     }
-
 
     public UserEntity getUserById(Long id)
     {
        return userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("USER NOT EXIST : "+id));
     }
-
 
     public UserDto signUp(SignUpDto signUpDto)
     {
@@ -57,7 +53,6 @@ public class UserService implements UserDetailsService
         {
             throw new BadCredentialsException("User with this email already exist"+signUpDto.getEmail());
         }
-
         UserEntity convertToEntity=modelMapper.map(signUpDto, UserEntity.class);
         convertToEntity.setPassword(passwordEncoder.encode(convertToEntity.getPassword()));
 
@@ -66,5 +61,4 @@ public class UserService implements UserDetailsService
 
         return convertBackToDto;
     }
-
 }
