@@ -1,6 +1,7 @@
 package com.nishintGoyal.SecurityApp.SecurityApplication2025.config;
 
 import com.nishintGoyal.SecurityApp.SecurityApplication2025.filters.JwtAuthFilter;
+import com.nishintGoyal.SecurityApp.SecurityApplication2025.handlers.OAuth2SuccessHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,10 +31,12 @@ import java.util.List;
 public class WebServiceConfig
 {
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-    public WebServiceConfig(JwtAuthFilter jwtAuthFilter)
+    public WebServiceConfig(JwtAuthFilter jwtAuthFilter, OAuth2SuccessHandler oAuth2SuccessHandler)
     {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
     }
 
     @Bean
@@ -41,21 +44,25 @@ public class WebServiceConfig
     {
         httpSecurity
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/posts","/auth/**").permitAll()//public for everyone
+                        .requestMatchers("/posts","/error","/auth/**","/home.html").permitAll()//public for everyone
                         .anyRequest().authenticated())
                 .csrf(csrfConfig->csrfConfig.disable())
                 .sessionManagement(sessionConfig->sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2config->oauth2config
+                        .failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler));
+
 
                 //.formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
     }
 
-
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception
+    {
         return configuration.getAuthenticationManager();
     }
 

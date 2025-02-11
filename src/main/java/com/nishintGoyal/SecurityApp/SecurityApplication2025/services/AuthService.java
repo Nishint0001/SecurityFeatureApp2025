@@ -38,7 +38,6 @@ public class AuthService
 
     public LoginResponseDto refreshToken(String refreshToken)
     {
-
         Long userId=jwtService.getUserIdFromToken(refreshToken);
 
         UserEntity userEntity=userService.getUserById(userId);
@@ -46,9 +45,6 @@ public class AuthService
         String accessToken=jwtService.generateAccessToken(userEntity);
 
         return new LoginResponseDto(userEntity.getId(),accessToken,refreshToken);
-
-
-
 
     }
 }

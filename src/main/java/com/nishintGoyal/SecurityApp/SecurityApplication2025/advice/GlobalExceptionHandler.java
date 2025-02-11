@@ -27,7 +27,8 @@ public class GlobalExceptionHandler
 //        return new ResponseEntity<>(apiError,HttpStatus.UNAUTHORIZED);
 //    }
 @ExceptionHandler(BadCredentialsException.class)
-public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException e) {
+public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException e)
+{
     ApiError apiError = new ApiError("Invalid username or password", HttpStatus.UNAUTHORIZED);
     return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
 }

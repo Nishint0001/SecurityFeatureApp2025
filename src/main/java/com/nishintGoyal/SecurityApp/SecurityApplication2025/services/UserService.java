@@ -40,9 +40,19 @@ public class UserService implements UserDetailsService
         return userEntity;
     }
 
+    public UserEntity getUserByEmail(String email)
+    {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     public UserEntity getUserById(Long id)
     {
        return userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("USER NOT EXIST : "+id));
+    }
+
+    public UserEntity saveUser(UserEntity user)
+    {
+       return userRepository.save(user);
     }
 
     public UserDto signUp(SignUpDto signUpDto)

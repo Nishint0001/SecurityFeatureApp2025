@@ -1,4 +1,4 @@
-  package com.nishintGoyal.SecurityApp.SecurityApplication2025;
+package com.nishintGoyal.SecurityApp.SecurityApplication2025;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
